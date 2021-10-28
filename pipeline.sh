@@ -15,7 +15,7 @@ mvn clean
 MVN_GROUPID="$(mvn -q -Dexec.executable=echo -Dexec.args='${project.groupId}' exec:exec)"
 MVN_ARTIFACTID="$(mvn -q -Dexec.executable=echo -Dexec.args='${project.artifactId}' exec:exec)"
 MVN_VERSION="$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' exec:exec)"
-curl -X "POST" "https://8081-lavender-spoonbill-5f1p2o0b.ws-us17.gitpod.io/api/v1/bom" \
+curl -X "POST" "https://8081-lavender-spoonbill-5f1p2o0b.ws-us18.gitpod.io/api/v1/bom" \
       -H 'Content-Type: multipart/form-data' \
       -H 'X-API-Key: 8kgEYuHFBySWoibLVhFpmyuipooGQiCb ' \
       -F "autoCreate=true" \
