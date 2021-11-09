@@ -61,4 +61,30 @@ jobs:
                -F "projectName=$MVN_GROUPID:$MVN_ARTIFACTID" \
                -F "projectVersion=$MVN_VERSION" \
                -F "bom=@target/bom.xml"
-          
+  sonar-analysis:
+    needs: test
+    runs-on: ubuntu-latest
+    steps: 
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Setup SDK
+        uses: actions/setup-java@v2
+        with: 
+          java-version: '11'
+          distribution: 'adopt'
+      - name: Run Sonar Analysis
+        run: |
+          MVN_GROUPID=$(mvn -q -Dexec.executable=echo -Dexec.args='${project.groupId}' exec:exec)
+          MVN_ARTIFACTID=$(mvn -q -Dexec.executable=echo -Dexec.args='${project.artifactId}' exec:exec)
+          MVN_VERSION=$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' exec:exec)          
+          mvn -B verify -DskipTests sonar:sonar \
+                -Dsonar.login=$SONAR_TOKEN \
+                -Dsonar.organization="rafaelrasso-1" \
+                -Dsonar.projectKey="rafaelrasso_sec-sast-sca-pipeline" \
+                -Dsonar.projectName="$MVN_GROUPID:$MVN_ARTIFACTID" \
+                -Dsonar.projectVersion="$MVN_VERSION" \
+                -Dsonar.sourceEncoding="UTF-8" 
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}              
